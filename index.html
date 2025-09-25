@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Tools Hub - Simple Modern Logistics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .tool-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        .tool-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        
+        .tool-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+        
+        .tool-description {
+            color: #666;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tool-link {
+            display: inline-block;
+            color: #667eea;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .tool-link:hover {
+            color: #764ba2;
+        }
+        
+        .tool-link::after {
+            content: ' →';
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+        
+        .tool-link:hover::after {
+            transform: translateX(3px);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            body {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Amazon Tools Hub</h1>
+            <p class="subtitle">Simple Modern Logistics - Streamline Your Amazon Operations</p>
+        </header>
+        
+        <div class="tools-grid">
+            <!-- Tool 1: PO Confirmation Tool -->
+            <div class="tool-card">
+                <span class="tool-number">1</span>
+                <h2 class="tool-title">PO Confirmation Tool</h2>
+                <p class="tool-description">
+                    Streamline purchase order confirmations with automated processing and validation features for enhanced workflow efficiency.
+                </p>
+                <a href="https://lucasmundtsm.github.io/PO-Confirmation-Tool/" class="tool-link" target="_blank">Open Tool</a>
+            </div>
+            
+            <!-- Tool 2: PO Worksheet Processor -->
+            <div class="tool-card">
+                <span class="tool-number">2</span>
+                <h2 class="tool-title">PO Worksheet Processor</h2>
+                <p class="tool-description">
+                    Upload and manage purchase order dimensions and weight data for streamlined logistics processing and accurate shipping calculations.
+                </p>
+                <a href="https://lucasmundtsm.github.io/PO-Worksheet-Processor/" class="tool-link" target="_blank">Open Tool</a>
+            </div>
+            
+            <!-- Tool 3: Amazon Fulfillment Centers Splitter -->
+            <div class="tool-card">
+                <span class="tool-number">3</span>
+                <h2 class="tool-title">Amazon Fulfillment Centers Splitter</h2>
+                <p class="tool-description">
+                    Split Amazon fulfillment center data efficiently, organizing shipments by facility for optimized processing and distribution management.
+                </p>
+                <a href="https://lucasmundtsm.github.io/AMZ-FC-Splitter/" class="tool-link" target="_blank">Open Tool</a>
+            </div>
+            
+            <!-- Tool 4: Amazon Worksheet & ARN Generator -->
+            <div class="tool-card">
+                <span class="tool-number">4</span>
+                <h2 class="tool-title">Amazon Worksheet & ARN Generator</h2>
+                <p class="tool-description">
+                    Generate comprehensive purchase order worksheets and ARN numbers for seamless Amazon integration and tracking capabilities.
+                </p>
+                <a href="https://lucasmundtsm.github.io/PO-Worksheet-and-ARN-Generator/" class="tool-link" target="_blank">Open Tool</a>
+            </div>
+            
+            <!-- Tool 5: UNIS FTP Generator (NEW) -->
+            <div class="tool-card">
+                <span class="tool-number">5</span>
+                <h2 class="tool-title">UNIS FTP Generator</h2>
+                <p class="tool-description">
+                    Convert processed PO upload files into FTP pick list format for UNIS facility operations with automated formatting and validation.
+                </p>
+                <a href="https://lucasmundtsm.github.io/UNIS-FTP-Generator/" class="tool-link" target="_blank">Open Tool</a>
+            </div>
+            
+            <!-- Tool 6: Carton Label SKU (moved from 5) -->
+            <div class="tool-card">
+                <span class="tool-number">6</span>
+                <h2 class="tool-title">Carton Label SKU</h2>
+                <p class="tool-description">
+                    Create accurate Amazon carton labels with SKU information for proper identification and efficient warehouse processing workflows.
+                </p>
+                <a href="https://lucasmundtsm.github.io/AMZ-Carton-Label-SKU-Generator/" class="tool-link" target="_blank">Open Tool</a>
+            </div>
+            
+            <!-- Tool 7: Amazon Pallet Labels (moved from 6) -->
+            <div class="tool-card">
+                <span class="tool-number">7</span>
+                <h2 class="tool-title">Amazon Pallet Labels</h2>
+                <p class="tool-description">
+                    Generate compliant Amazon pallet labels with proper formatting and tracking information for smooth fulfillment center operations.
+                </p>
+                <a href="https://lucasmundtsm.github.io/Amazon-Pallet-Labels/" class="tool-link" target="_blank">Open Tool</a>
+            </div>
+            
+            <!-- Tool 8: Small Parcel ASN Divider (NEW) -->
+            <div class="tool-card">
+                <span class="tool-number">8</span>
+                <h2 class="tool-title">Small Parcel ASN Divider</h2>
+                <p class="tool-description">
+                    Divide and filter small parcel shipments, automatically excluding shipments with existing ASN numbers for streamlined processing.
+                </p>
+                <a href="https://lucasmundtsm.github.io/Small-Parcel-ASN-Divider/" class="tool-link" target="_blank">Open Tool</a>
+            </div>
+            
+            <!-- Tool 9: NetSuite PO Fulfillment Generator (NEW) -->
+            <div class="tool-card">
+                <span class="tool-number">9</span>
+                <h2 class="tool-title">NetSuite PO Fulfillment Generator</h2>
+                <p class="tool-description">
+                    Create facility-specific fulfillment templates for Encore and UNIS operations, managing pending Amazon orders with automated prioritization.
+                </p>
+                <a href="https://lucasmundtsm.github.io/Netsuite-PO-Fulfillment-Generator/" class="tool-link" target="_blank">Open Tool</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
