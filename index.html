@@ -3,243 +3,1379 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amazon Tools Hub - Simple Modern Logistics</title>
+    <title>Commercial Invoice Generator | Amazon Export Documentation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amazon+Ember:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            /* Amazon Brand Colors */
+            --amazon-orange: #FF9900;
+            --amazon-dark-orange: #e47911;
+            --amazon-blue: #146EB4;
+            --amazon-dark-blue: #0F4C81;
+            --amazon-navy: #232F3E;
+            --amazon-dark-navy: #131A22;
+            --amazon-light-gray: #F3F3F3;
+            --amazon-gray: #EAEDED;
+            --amazon-medium-gray: #DDD;
+            --amazon-text: #0F1111;
+            --amazon-link: #007185;
+            --amazon-success: #007600;
+            --amazon-error: #B12704;
+            --amazon-warning: #F08804;
+            
+            --shadow-sm: 0 2px 5px 0 rgba(213,217,217,.5);
+            --shadow-md: 0 2px 4px 0 rgba(0,0,0,0.13);
+            --shadow-lg: 0 0 8px 2px rgba(0,0,0,0.1);
+            --radius: 8px;
+            --radius-sm: 4px;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 2rem;
+            font-family: "Amazon Ember", "Open Sans", Arial, sans-serif;
+            background-color: var(--amazon-gray);
+            color: var(--amazon-text);
+            line-height: 1.5;
+            font-size: 14px;
         }
-        
-        .container {
-            max-width: 1200px;
+
+        .amazon-header {
+            background-color: var(--amazon-dark-navy);
+            padding: 14px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
             margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-        
-        h1 {
-            color: white;
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        .subtitle {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1rem;
-            font-weight: 400;
-        }
-        
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-        
-        .tool-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .tool-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        .tool-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-        }
-        
-        .tool-number {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            font-size: 1rem;
+            gap: 20px;
         }
-        
-        .tool-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 0.75rem;
-            line-height: 1.4;
-        }
-        
-        .tool-description {
-            color: #666;
-            line-height: 1.6;
-            font-size: 0.95rem;
-            margin-bottom: 1rem;
-        }
-        
-        .tool-link {
-            display: inline-block;
-            color: #667eea;
-            font-weight: 500;
-            font-size: 0.9rem;
+
+        .amazon-logo {
+            color: var(--amazon-orange);
+            font-size: 24px;
+            font-weight: 700;
             text-decoration: none;
-            transition: color 0.3s ease;
         }
-        
-        .tool-link:hover {
-            color: #764ba2;
+
+        .header-title {
+            color: white;
+            font-size: 18px;
+            font-weight: 400;
         }
-        
-        .tool-link::after {
-            content: ' →';
-            transition: transform 0.3s ease;
+
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background: var(--amazon-dark-navy);
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--amazon-dark-navy);
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .upload-section {
+            background: var(--amazon-light-gray);
+            border: 2px dashed var(--amazon-medium-gray);
+            border-radius: var(--radius-sm);
+            padding: 40px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .upload-section.dragover {
+            border-color: var(--amazon-orange);
+            background: #FFF8F0;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+            border: 1px solid #a88734;
+            border-radius: 3px;
+            color: var(--amazon-text);
+            cursor: pointer;
+            padding: 8px 16px;
+            font-size: 13px;
+            line-height: 19px;
+            text-align: center;
+            text-decoration: none;
             display: inline-block;
+            font-family: "Amazon Ember", Arial, sans-serif;
+            transition: background 0.2s;
+            margin: 0 5px;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to bottom, #f5d78e, #eeb933);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(to bottom, #fff, #e7e9ec);
+            border: 1px solid #adb1b8;
+            border-radius: 3px;
+            color: var(--amazon-text);
+            cursor: pointer;
+            padding: 8px 16px;
+            font-size: 13px;
+            line-height: 19px;
+            text-align: center;
+            display: inline-block;
+            transition: background 0.2s;
+            margin: 0 5px;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(to bottom, #f7f8fa, #e7e9ec);
+        }
+
+        .btn-success {
+            background: var(--amazon-success);
+            border: 1px solid #005700;
+            color: white;
+            padding: 10px 24px;
+            font-size: 14px;
+        }
+
+        .btn-success:hover {
+            background: #005700;
+        }
+
+        .btn-success:disabled {
+            background: #e7e9ec;
+            border-color: #adb1b8;
+            color: #565959;
+            cursor: not-allowed;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            padding-left: 2px;
+            padding-bottom: 2px;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--amazon-text);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid #888C8C;
+            border-radius: 3px;
+            font-size: 14px;
+            box-shadow: 0 1px 2px rgba(15,17,17,.15) inset;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--amazon-orange);
+            box-shadow: 0 0 0 3px #C8F3FA, 0 1px 2px rgba(15,17,17,.15) inset;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .amazon-checkbox {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: white;
+            border: 1px solid var(--amazon-medium-gray);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .amazon-checkbox:hover {
+            border-color: var(--amazon-orange);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .amazon-checkbox.selected {
+            border-color: var(--amazon-orange);
+            background: #FFF8F0;
+        }
+
+        .amazon-checkbox input[type="checkbox"] {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-label {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .checkbox-title {
+            font-weight: 700;
+            color: var(--amazon-text);
+        }
+
+        .checkbox-desc {
+            font-size: 12px;
+            color: #565959;
+            margin-top: 2px;
+        }
+
+        .status-message {
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            margin: 16px 0;
+            display: none;
+        }
+
+        .status-message.success {
+            background: #F0F8F0;
+            border: 1px solid var(--amazon-success);
+            color: var(--amazon-success);
+        }
+
+        .status-message.error {
+            background: #FFF5F5;
+            border: 1px solid var(--amazon-error);
+            color: var(--amazon-error);
+        }
+
+        .invoice-container {
+            display: none;
+        }
+
+        .invoice-tabs {
+            background: white;
+            border: 1px solid var(--amazon-medium-gray);
+            border-radius: var(--radius) var(--radius) 0 0;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .invoice-tab {
+            flex: 1;
+            padding: 12px 20px;
+            background: var(--amazon-light-gray);
+            border: none;
+            border-right: 1px solid var(--amazon-medium-gray);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--amazon-link);
+            transition: background 0.2s;
+        }
+
+        .invoice-tab:last-child {
+            border-right: none;
+        }
+
+        .invoice-tab:hover {
+            background: var(--amazon-gray);
+        }
+
+        .invoice-tab.active {
+            background: white;
+            color: var(--amazon-text);
+            border-bottom: 2px solid var(--amazon-orange);
+        }
+
+        .badge {
+            background: var(--amazon-orange);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-left: 6px;
+        }
+
+        #invoiceContent {
+            background: white;
+            border: 1px solid var(--amazon-medium-gray);
+            border-top: none;
+            border-radius: 0 0 var(--radius) var(--radius);
+            padding: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .invoice {
+            background: white;
+            border: 1px solid var(--amazon-medium-gray);
+            padding: 30px;
+            margin-bottom: 20px;
+            page-break-before: always;
+            page-break-after: always;
         }
         
-        .tool-link:hover::after {
-            transform: translateX(3px);
+        .invoice:first-child {
+            page-break-before: auto;
         }
-        
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .tools-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-            
+
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--amazon-text);
+        }
+
+        .invoice-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--amazon-text);
+        }
+
+        .invoice-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .addresses {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .address-block {
+            border: 1px solid var(--amazon-medium-gray);
+            padding: 15px;
+            background: var(--amazon-light-gray);
+        }
+
+        .address-block h3 {
+            color: var(--amazon-text);
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .address-line {
+            margin: 5px 0;
+            color: var(--amazon-text);
+            font-size: 13px;
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 12px;
+        }
+
+        .invoice-table th {
+            background: var(--amazon-dark-navy);
+            color: white;
+            padding: 8px 6px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 11px;
+            border: 1px solid var(--amazon-dark-navy);
+        }
+
+        .invoice-table td {
+            padding: 6px;
+            border: 1px solid var(--amazon-medium-gray);
+            color: var(--amazon-text);
+        }
+
+        .invoice-table tbody tr:nth-child(even) {
+            background: var(--amazon-light-gray);
+        }
+
+        .invoice-table tbody tr:hover {
+            background: #FFF8F0;
+        }
+
+        .invoice-table .number {
+            text-align: right;
+        }
+
+        .editable-cell {
+            cursor: text;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .editable-cell:hover {
+            background: #FFCC00 !important;
+            box-shadow: inset 0 0 3px rgba(0,0,0,0.2);
+        }
+
+        .editable-cell:focus {
+            background: white !important;
+            outline: 2px solid var(--amazon-orange);
+            outline-offset: -1px;
+            box-shadow: 0 0 5px rgba(255, 153, 0, 0.5);
+        }
+
+        .invoice-total {
+            background: var(--amazon-dark-navy);
+            color: white;
+            padding: 15px;
+            text-align: right;
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 20px;
+        }
+
+        .invoice-actions {
+            background: var(--amazon-light-gray);
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--amazon-medium-gray);
+            border-top: none;
+            border-radius: 0 0 var(--radius) var(--radius);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        @media print {
             body {
-                padding: 1rem;
+                background: white;
+            }
+
+            .amazon-header,
+            .card-header,
+            .upload-section,
+            .form-group,
+            .checkbox-group,
+            .btn-success,
+            .status-message,
+            .invoice-tabs,
+            .invoice-actions {
+                display: none !important;
+            }
+
+            .main-card {
+                box-shadow: none;
+                border: none;
+            }
+
+            .invoice {
+                page-break-after: always;
+                page-break-before: always;
+                border: 1px solid #000;
+                margin: 0;
+            }
+            
+            .invoice:first-child {
+                page-break-before: auto;
+            }
+
+            #invoiceContent {
+                border: none;
+                max-height: none;
+            }
+
+            .editable-cell {
+                background: white !important;
             }
         }
     </style>
 </head>
 <body>
+    <div class="amazon-header">
+        <div class="header-content">
+            <div class="amazon-logo">amazon</div>
+            <div class="header-title">Commercial Invoice Generator</div>
+        </div>
+    </div>
+
     <div class="container">
-        <header>
-            <h1>Amazon Tools Hub</h1>
-            <p class="subtitle">Simple Modern Logistics - Streamline Your Amazon Operations</p>
-        </header>
-        
-        <div class="tools-grid">
-            <!-- Tool 1: PO Confirmation Tool -->
-            <div class="tool-card">
-                <span class="tool-number">1</span>
-                <h2 class="tool-title">PO Confirmation Tool</h2>
-                <p class="tool-description">
-                    Streamline purchase order confirmations with automated processing and validation features for enhanced workflow efficiency.
-                </p>
-                <a href="https://lucasmundtsm.github.io/PO-Confirmation-Tool/" class="tool-link" target="_blank">Open Tool</a>
+        <div class="main-card">
+            <div class="card-header">Upload Export Documentation</div>
+            <div class="card-body">
+                <div class="upload-section" id="uploadSection">
+                    <input type="file" id="fileInput" accept=".xlsx,.xls" />
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="#FF9900" style="margin-bottom: 16px;">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                    </svg>
+                    <h3 style="margin-bottom: 8px; color: var(--amazon-text);">Upload Excel File</h3>
+                    <p style="margin-bottom: 16px; color: #565959;">Drag and drop your PO file here or click to browse</p>
+                    <button class="btn-primary" onclick="document.getElementById('fileInput').click()">
+                        Choose File
+                    </button>
+                    <p id="fileName" style="margin-top: 16px; color: var(--amazon-success); font-weight: 700;"></p>
+                </div>
             </div>
-            
-            <!-- Tool 2: PO Worksheet Processor -->
-            <div class="tool-card">
-                <span class="tool-number">2</span>
-                <h2 class="tool-title">PO Worksheet Processor</h2>
-                <p class="tool-description">
-                    Upload and manage purchase order dimensions and weight data for streamlined logistics processing and accurate shipping calculations.
-                </p>
-                <a href="https://lucasmundtsm.github.io/PO-Worksheet-Processor/" class="tool-link" target="_blank">Open Tool</a>
+        </div>
+
+        <div class="main-card">
+            <div class="card-header">Configuration Settings</div>
+            <div class="card-body">
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Invoice Date</label>
+                        <input type="date" id="invoiceDate" value="" disabled style="background: #f3f3f3; cursor: not-allowed;">
+                    </div>
+                    <div class="form-group">
+                        <label>Sender TIN#</label>
+                        <input type="text" id="senderTin" value="20-1330433" placeholder="20-1330433">
+                    </div>
+                    <div class="form-group">
+                        <label>Sender Name</label>
+                        <input type="text" id="senderName" value="Real Value, LLC" placeholder="Real Value, LLC">
+                    </div>
+                    <div class="form-group">
+                        <label>Sender Address (use | for line breaks)</label>
+                        <input type="text" id="senderAddress" value="750 SW 24th St, Suite 300|Moore, OK 73160|US" placeholder="Address Line 1|City, State ZIP|Country">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Select Label Types to Generate</label>
+                    <div class="checkbox-group">
+                        <div class="amazon-checkbox selected" onclick="toggleCheckbox(this, 'processEncore')">
+                            <input type="checkbox" id="processEncore" checked>
+                            <div class="checkbox-label">
+                                <span class="checkbox-title">Encore Labels</span>
+                                <span class="checkbox-desc">Generate from Encore sheet</span>
+                            </div>
+                        </div>
+                        <div class="amazon-checkbox selected" onclick="toggleCheckbox(this, 'processUnis')">
+                            <input type="checkbox" id="processUnis" checked>
+                            <div class="checkbox-label">
+                                <span class="checkbox-title">Unis Labels</span>
+                                <span class="checkbox-desc">Generate from Unis sheet</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Select Vendor Codes</label>
+                    <div class="checkbox-group">
+                        <div class="amazon-checkbox selected" onclick="toggleCheckbox(this, 'vendor-HG8BU')">
+                            <input type="checkbox" id="vendor-HG8BU" value="HG8BU" checked>
+                            <div class="checkbox-label">
+                                <span class="checkbox-title">HG8BU</span>
+                                <span class="checkbox-desc">Canada DI Account</span>
+                            </div>
+                        </div>
+                        <div class="amazon-checkbox selected" onclick="toggleCheckbox(this, 'vendor-PT71U')">
+                            <input type="checkbox" id="vendor-PT71U" value="PT71U" checked>
+                            <div class="checkbox-label">
+                                <span class="checkbox-title">PT71U</span>
+                                <span class="checkbox-desc">Canada Kitchen Account</span>
+                            </div>
+                        </div>
+                        <div class="amazon-checkbox selected" onclick="toggleCheckbox(this, 'vendor-TZ7HI')">
+                            <input type="checkbox" id="vendor-TZ7HI" value="TZ7HI" checked>
+                            <div class="checkbox-label">
+                                <span class="checkbox-title">TZ7HI</span>
+                                <span class="checkbox-desc">Mexico Kitchen Account</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 24px;">
+                    <button class="btn-primary btn-success" id="processBtn" onclick="processFile()" disabled>
+                        Generate Invoices
+                    </button>
+                </div>
+                
+                <div class="status-message" id="statusMessage"></div>
             </div>
-            
-            <!-- Tool 3: Amazon Fulfillment Centers Splitter -->
-            <div class="tool-card">
-                <span class="tool-number">3</span>
-                <h2 class="tool-title">Amazon Fulfillment Centers Splitter</h2>
-                <p class="tool-description">
-                    Split Amazon fulfillment center data efficiently, organizing shipments by facility for optimized processing and distribution management.
-                </p>
-                <a href="https://lucasmundtsm.github.io/AMZ-FC-Splitter/" class="tool-link" target="_blank">Open Tool</a>
-            </div>
-            
-            <!-- Tool 4: Amazon Worksheet & ARN Generator -->
-            <div class="tool-card">
-                <span class="tool-number">4</span>
-                <h2 class="tool-title">Amazon Worksheet & ARN Generator</h2>
-                <p class="tool-description">
-                    Generate comprehensive purchase order worksheets and ARN numbers for seamless Amazon integration and tracking capabilities.
-                </p>
-                <a href="https://lucasmundtsm.github.io/PO-Worksheet-and-ARN-Generator/" class="tool-link" target="_blank">Open Tool</a>
-            </div>
-            
-            <!-- Tool 5: UNIS FTP Generator (NEW) -->
-            <div class="tool-card">
-                <span class="tool-number">5</span>
-                <h2 class="tool-title">UNIS FTP Generator</h2>
-                <p class="tool-description">
-                    Convert processed PO upload files into FTP pick list format for UNIS facility operations with automated formatting and validation.
-                </p>
-                <a href="https://lucasmundtsm.github.io/UNIS-FTP-Generator/" class="tool-link" target="_blank">Open Tool</a>
-            </div>
-            
-            <!-- Tool 6: Carton Label SKU (moved from 5) -->
-            <div class="tool-card">
-                <span class="tool-number">6</span>
-                <h2 class="tool-title">Carton Label SKU</h2>
-                <p class="tool-description">
-                    Create accurate Amazon carton labels with SKU information for proper identification and efficient warehouse processing workflows.
-                </p>
-                <a href="https://lucasmundtsm.github.io/AMZ-Carton-Label-SKU-Generator/" class="tool-link" target="_blank">Open Tool</a>
-            </div>
-            
-            <!-- Tool 7: Amazon Pallet Labels (moved from 6) -->
-            <div class="tool-card">
-                <span class="tool-number">7</span>
-                <h2 class="tool-title">Amazon Pallet Labels</h2>
-                <p class="tool-description">
-                    Generate compliant Amazon pallet labels with proper formatting and tracking information for smooth fulfillment center operations.
-                </p>
-                <a href="https://lucasmundtsm.github.io/Amazon-Pallet-Labels/" class="tool-link" target="_blank">Open Tool</a>
-            </div>
-            
-            <!-- Tool 8: Small Parcel ASN Divider (NEW) -->
-            <div class="tool-card">
-                <span class="tool-number">8</span>
-                <h2 class="tool-title">Small Parcel ASN Divider</h2>
-                <p class="tool-description">
-                    Divide and filter small parcel shipments, automatically excluding shipments with existing ASN numbers for streamlined processing.
-                </p>
-                <a href="https://lucasmundtsm.github.io/Small-Parcel-ASN-Divider/" class="tool-link" target="_blank">Open Tool</a>
-            </div>
-            
-            <!-- Tool 9: NetSuite PO Fulfillment Generator (NEW) -->
-            <div class="tool-card">
-                <span class="tool-number">9</span>
-                <h2 class="tool-title">NetSuite PO Fulfillment Generator</h2>
-                <p class="tool-description">
-                    Create facility-specific fulfillment templates for Encore and UNIS operations, managing pending Amazon orders with automated prioritization.
-                </p>
-                <a href="https://lucasmundtsm.github.io/Netsuite-PO-Fulfillment-Generator/" class="tool-link" target="_blank">Open Tool</a>
+        </div>
+
+        <div class="invoice-container" id="invoiceContainer">
+            <div class="invoice-tabs" id="invoiceTabs"></div>
+            <div id="invoiceContent"></div>
+            <div class="invoice-actions">
+                <button class="btn-primary" onclick="printInvoices()">
+                    Print All Invoices
+                </button>
+                <button class="btn-secondary" onclick="downloadInvoiceZip('Encore Labels')">
+                    Download Encore Invoices (ZIP)
+                </button>
+                <button class="btn-secondary" onclick="downloadInvoiceZip('Unis Labels')">
+                    Download Unis Invoices (ZIP)
+                </button>
             </div>
         </div>
     </div>
+
+    <script>
+        let excelData = null;
+        let processedInvoices = [];
+        
+        // Always use today's date for invoices
+        function getTodayDate() {
+            return new Date().toISOString().split('T')[0];
+        }
+        document.getElementById('invoiceDate').value = getTodayDate();
+
+        // Fulfillment center addresses - Complete list for Canada and Mexico
+        const fcAddresses = {
+            // CANADA - Alberta
+            'XCAB': 'Amazon\n1882 118 Ave NE\nCalgary, AB, T3K 0R1\nCanada',
+            'YEG1': 'Amazon\n1440 39 AVE\nNisku, AB, T9E 0B4\nCanada',
+            'YEG2': 'Amazon\n27383 92 Ave\nAcheson, AB, T7X 5A6\nCanada',
+            'YYC1': 'Amazon\n293069 Colonel Robertson Way\nCalgary, AB, T4A 1C6\nCanada',
+            'YYC4': 'Amazon\n6635 106 AVE SE\nCALGARY, AB, T2C5X1\nCanada',
+            
+            // CANADA - Ontario
+            'YHM1': 'Amazon\n110 Aeropark Blvd\nHamilton, ON, L0R 1W0\nCanada',
+            'YOO1': 'Amazon\n789 Salem Rd N\nAjax, ON, L1Z 0J2\nCanada',
+            'YOW1': 'Amazon\n5225 Boundary Road\nNavan, ON, K4B 0L3\nCanada',
+            'YOW3': 'Amazon\n222 Citigate Drive\nNEPEAN, ON, K2J 6K7\nCanada',
+            'YXU1': 'Amazon\n11884 Sunset Dr\nST Thomas, ON, N5P 0G9\nCanada',
+            'YYZ3': 'Amazon\n7995 Winston Churchill Blvd.\nBrampton, ON, L6Y 5Z4\nCanada',
+            'YYZ4': 'Amazon\n8050 Heritage Road\nBrampton, ON, L6Y 0C9\nCanada',
+            'YYZ7': 'Amazon\n12724 Coleraine Drive\nBolton, ON, L7E 4L8\nCanada',
+            'YYZ9': 'Amazon\n6351 Steeles Ave E\nScarborough, ON, M1X 1N5\nCanada',
+            
+            // CANADA - British Columbia
+            'YVR2': 'Amazon\n450 Derwent PL\nDelta, BC, V3M 5Y9\nCanada',
+            'YVR3': 'Amazon\n109 Braid Street\nNew Westminster, BC, V3L5H4\nCanada',
+            'YVR4': 'Amazon\n4189 Salish Sea Way\nTsawwassen, BC, V4M 0B9\nCanada',
+            'YXX2': 'Amazon\n16131 Blundell Rd\nRICHMOND, BC, V6W 0A3\nCanada',
+            
+            // MEXICO
+            'BJX1': 'Amazon\n107 Carretera a Santa Ana del Conde, Km 4.5\nLeón, Guanajuato, 37680\nMEXICO',
+            'GDL1': 'Amazon\nCarr. Guadalajara - Chapala 9999\nZapote del Valle, Jal., 45672\nMEXICO',
+            'MEX2': 'Amazon\nManzana 005\nCuautitlan Izcalli, Estado de Mexico, 54769\nMEXICO',
+            'MEX3': 'Amazon\nAmazon MEX3 Prologis Park\nGrande Tepotzotlan, Estado de Mexico, 54607\nMEXICO',
+            'MEX6': 'Amazon\nFraccion B de la Fraccion 1 Ext SN\nTepotzotlán, Estado de Mexico, 54607\nMEXICO',
+            'MTY1': 'Amazon\nBLVD GUADALUPE No.403\nAPODACA, NUEVO LEON, 66627\nMEXICO',
+            'TIJ1': 'Amazon\nCamino Vecinal #20652\nNave 4 Tijuana, Baja California, 22203\nMEXICO'
+        };
+
+        function toggleCheckbox(element, checkboxId) {
+            element.classList.toggle('selected');
+            const checkbox = document.getElementById(checkboxId);
+            checkbox.checked = !checkbox.checked;
+        }
+
+        // Setup drag and drop
+        const uploadSection = document.getElementById('uploadSection');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadSection.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadSection.classList.add('dragover');
+        });
+
+        uploadSection.addEventListener('dragleave', () => {
+            uploadSection.classList.remove('dragover');
+        });
+
+        uploadSection.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadSection.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && (files[0].name.endsWith('.xlsx') || files[0].name.endsWith('.xls'))) {
+                handleFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            document.getElementById('fileName').textContent = `✓ ${file.name}`;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    excelData = workbook;
+                    document.getElementById('processBtn').disabled = false;
+                    showStatus('File loaded successfully. Ready to generate invoices.', 'success');
+                } catch (error) {
+                    showStatus('Error reading file: ' + error.message, 'error');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.textContent = message;
+            statusDiv.className = 'status-message ' + type;
+            statusDiv.style.display = 'block';
+            
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function getSelectedVendorCodes() {
+            const codes = [];
+            ['HG8BU', 'PT71U', 'TZ7HI'].forEach(code => {
+                if (document.getElementById(`vendor-${code}`).checked) {
+                    codes.push(code);
+                }
+            });
+            return codes;
+        }
+
+        function processFile() {
+            if (!excelData) {
+                showStatus('Please upload an Excel file first.', 'error');
+                return;
+            }
+
+            const vendorCodes = getSelectedVendorCodes();
+            if (vendorCodes.length === 0) {
+                showStatus('Please select at least one vendor code.', 'error');
+                return;
+            }
+
+            const processEncore = document.getElementById('processEncore').checked;
+            const processUnis = document.getElementById('processUnis').checked;
+
+            if (!processEncore && !processUnis) {
+                showStatus('Please select at least one sheet to process (Encore or Unis).', 'error');
+                return;
+            }
+
+            processedInvoices = [];
+            
+            // Process Accept Encore sheet if selected
+            if (processEncore && excelData.Sheets['accept encore']) {
+                const encoreData = XLSX.utils.sheet_to_json(excelData.Sheets['accept encore']);
+                processSheet(encoreData, 'Encore Labels', vendorCodes);
+            }
+            
+            // Process Accept Unis sheet if selected
+            if (processUnis && excelData.Sheets['accept unis']) {
+                const unisData = XLSX.utils.sheet_to_json(excelData.Sheets['accept unis']);
+                processSheet(unisData, 'Unis Labels', vendorCodes);
+            }
+
+            if (processedInvoices.length > 0) {
+                displayInvoices();
+                showStatus(`✓ Generated ${processedInvoices.length} invoice(s) successfully`, 'success');
+                document.getElementById('invoiceContainer').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                showStatus('No data found for selected vendor codes or sheets.', 'error');
+            }
+        }
+
+        function processSheet(data, sheetType, vendorCodes) {
+            // Filter data by vendor codes
+            const filteredData = data.filter(row => {
+                const vendorCode = row['Vendor Code'] || row['vendor_code'] || row['VendorCode'];
+                return vendorCodes.includes(vendorCode);
+            });
+
+            // Group by Fulfillment Center ONLY - all POs with same FC on same invoice
+            const groups = {};
+            filteredData.forEach(row => {
+                const fc = row['FC'] || row['Fulfillment Center'] || row['fulfillment_center'] || row['Warehouse'] || 'UNKNOWN';
+                
+                // Use FC as the only grouping key
+                if (!groups[fc]) {
+                    groups[fc] = {
+                        fc: fc,
+                        type: sheetType,
+                        items: []
+                    };
+                }
+                groups[fc].items.push(row);
+            });
+
+            // Create one invoice per FC
+            Object.values(groups).forEach(group => {
+                const invoice = createInvoice(group);
+                processedInvoices.push(invoice);
+            });
+        }
+
+        function createInvoice(group) {
+            // Always use today's date for invoice creation
+            const invoiceDate = getTodayDate();
+            
+            // Create invoice number using FC code and date
+            const invoiceNumber = `${group.fc}-${invoiceDate.replace(/-/g, '')}-INV`;
+            
+            // Calculate totals
+            let totalQuantity = 0;
+            let totalCartons = 0;
+            let totalAmount = 0;
+            
+            const items = group.items.map(row => {
+                // Get the PO Number for this specific row
+                const itemPO = row['Order/PO Number'] || row['order/po number'] || row['PO Number'] || row['PO'] || '';
+                
+                // Direct access to columns - exact names from the Excel
+                const quantity = parseInt(row['Total Qty to Fulfill']) || 0;
+                const cartons = parseInt(row['CARTONS']) || 0;
+                const unitPrice = parseFloat(row['Cost']) || 0;
+                const htsCode = row['HTS code'] || '';
+                
+                // Calculate subtotal
+                const subtotal = quantity * unitPrice;
+                
+                // Add to totals
+                totalQuantity += quantity;
+                totalCartons += cartons;
+                totalAmount += subtotal;
+                
+                return {
+                    poNumber: itemPO,
+                    quantity: quantity,
+                    cartons: cartons,
+                    asin: row['ASIN'] || '',
+                    sku: row['SKU'] || '',
+                    description: row['Title'] || row['Description'] || '',  // Leave blank if not provided
+                    materials: row['Materials'] || '',
+                    countryOfOrigin: 'CN',
+                    currency: row['Currency Code'] || 'USD',
+                    unitPrice: unitPrice,
+                    subtotal: subtotal,
+                    htsCode: htsCode || ''
+                };
+            });
+
+            return {
+                invoiceNumber: invoiceNumber,
+                invoiceDate: invoiceDate,
+                type: group.type,
+                fc: group.fc,
+                fcAddress: fcAddresses[group.fc] || `Amazon\n${group.fc}\nAddress TBD\nCA`,
+                items: items,
+                totalQuantity: totalQuantity,
+                totalCartons: totalCartons,
+                totalAmount: totalAmount
+            };
+        }
+
+        function displayInvoices() {
+            const container = document.getElementById('invoiceContainer');
+            const tabsDiv = document.getElementById('invoiceTabs');
+            const contentDiv = document.getElementById('invoiceContent');
+            
+            // Clear previous content
+            tabsDiv.innerHTML = '';
+            contentDiv.innerHTML = '';
+            
+            // Group invoices by type
+            const invoiceGroups = {};
+            processedInvoices.forEach(invoice => {
+                if (!invoiceGroups[invoice.type]) {
+                    invoiceGroups[invoice.type] = [];
+                }
+                invoiceGroups[invoice.type].push(invoice);
+            });
+            
+            let allHtml = '';
+            let firstTab = true;
+            
+            // Create tabs and content for each unique label
+            Object.keys(invoiceGroups).forEach(label => {
+                const invoices = invoiceGroups[label];
+                
+                const tab = document.createElement('button');
+                tab.className = 'invoice-tab' + (firstTab ? ' active' : '');
+                tab.innerHTML = `${label} <span class="badge">${invoices.length}</span>`;
+                tab.onclick = () => showInvoiceGroup(label);
+                tabsDiv.appendChild(tab);
+                
+                invoices.forEach(invoice => {
+                    allHtml += generateInvoiceHTML(invoice, label);
+                });
+                
+                firstTab = false;
+            });
+            
+            contentDiv.innerHTML = allHtml;
+            container.style.display = 'block';
+            
+            // Show first group by default
+            const firstLabel = Object.keys(invoiceGroups)[0];
+            if (firstLabel) {
+                showInvoiceGroup(firstLabel);
+            }
+        }
+
+        function showInvoiceGroup(type) {
+            // Update tabs
+            document.querySelectorAll('.invoice-tab').forEach(tab => {
+                if (tab.textContent.includes(type)) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            
+            // Show/hide invoices
+            document.querySelectorAll('.invoice').forEach(invoice => {
+                if (invoice.dataset.type === type) {
+                    invoice.style.display = 'block';
+                } else {
+                    invoice.style.display = 'none';
+                }
+            });
+        }
+
+        function generateInvoiceHTML(invoice, type) {
+            const senderName = document.getElementById('senderName').value;
+            const senderAddressRaw = document.getElementById('senderAddress').value;
+            
+            // Format sender address - split by pipe for line breaks
+            const addressParts = senderAddressRaw.split('|');
+            const senderAddress = addressParts.join('<br>');
+            
+            const senderTin = document.getElementById('senderTin').value;
+            
+            let itemsHtml = '';
+            invoice.items.forEach((item, index) => {
+                itemsHtml += `
+                    <tr data-invoice="${invoice.invoiceNumber}" data-index="${index}">
+                        <td>${item.poNumber}</td>
+                        <td class="number">${item.quantity}</td>
+                        <td class="number">${item.cartons}</td>
+                        <td>${item.asin}</td>
+                        <td>${item.sku}</td>
+                        <td class="editable-cell" contenteditable="true" data-field="description" 
+                            onblur="updateInvoiceField('${invoice.invoiceNumber}', ${index}, 'description', this.textContent)"
+                            onfocus="this.dataset.original = this.textContent">${item.description}</td>
+                        <td class="editable-cell" contenteditable="true" data-field="materials"
+                            onblur="updateInvoiceField('${invoice.invoiceNumber}', ${index}, 'materials', this.textContent)"
+                            onfocus="this.dataset.original = this.textContent">${item.materials}</td>
+                        <td class="editable-cell" contenteditable="true" data-field="countryOfOrigin"
+                            onblur="updateInvoiceField('${invoice.invoiceNumber}', ${index}, 'countryOfOrigin', this.textContent)"
+                            onfocus="this.dataset.original = this.textContent">${item.countryOfOrigin}</td>
+                        <td>${item.currency}</td>
+                        <td class="number editable-cell" contenteditable="true" data-field="unitPrice"
+                            onblur="updateInvoicePrice('${invoice.invoiceNumber}', ${index}, this.textContent)"
+                            onfocus="this.dataset.original = this.textContent">$${item.unitPrice.toFixed(2)}</td>
+                        <td class="number" id="subtotal-${invoice.invoiceNumber}-${index}">$${item.subtotal.toFixed(2)}</td>
+                        <td class="editable-cell" contenteditable="true" data-field="htsCode"
+                            onblur="updateInvoiceField('${invoice.invoiceNumber}', ${index}, 'htsCode', this.textContent)"
+                            onfocus="this.dataset.original = this.textContent">${item.htsCode}</td>
+                    </tr>
+                `;
+            });
+            
+            return `
+                <div class="invoice" data-type="${type}" data-invoice="${invoice.invoiceNumber}">
+                    <div class="invoice-header">
+                        <h2>COMMERCIAL INVOICE</h2>
+                    </div>
+                    
+                    <div class="invoice-info">
+                        <div>Date: ${invoice.invoiceDate}</div>
+                        <div>Invoice: ${invoice.invoiceNumber}</div>
+                    </div>
+                    
+                    <div class="addresses">
+                        <div class="address-block">
+                            <h3>Sender</h3>
+                            <div class="address-line"><strong>${senderName}</strong></div>
+                            <div class="address-line">${senderAddress}</div>
+                            <div class="address-line">Sender TIN#: ${senderTin}</div>
+                        </div>
+                        <div class="address-block">
+                            <h3>Receiver: ${invoice.fc}</h3>
+                            <div class="address-line">${invoice.fcAddress.replace(/\n/g, '<br>')}</div>
+                        </div>
+                    </div>
+                    
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th>PO Number</th>
+                                <th>EA</th>
+                                <th>CA</th>
+                                <th>ASIN</th>
+                                <th>SKU</th>
+                                <th>Desc</th>
+                                <th>Materials</th>
+                                <th>Country</th>
+                                <th>Currency</th>
+                                <th>Unit Value</th>
+                                <th>Subtotal</th>
+                                <th>HTS Code</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsHtml}
+                        </tbody>
+                    </table>
+                    
+                    <div class="invoice-total" id="total-${invoice.invoiceNumber}">
+                        Total: ${invoice.totalQuantity || 0} units • ${invoice.totalCartons || 0} cartons • $${(invoice.totalAmount || 0).toFixed(2)}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Update invoice field when edited
+        function updateInvoiceField(invoiceNumber, itemIndex, field, value) {
+            const invoice = processedInvoices.find(inv => inv.invoiceNumber === invoiceNumber);
+            if (invoice && invoice.items[itemIndex]) {
+                invoice.items[itemIndex][field] = value;
+                showStatus(`✏️ Updated ${field}`, 'success');
+                console.log(`Updated invoice ${invoiceNumber}, item ${itemIndex}, field ${field} to: ${value}`);
+            }
+        }
+
+        // Update invoice price and recalculate
+        function updateInvoicePrice(invoiceNumber, itemIndex, value) {
+            const invoice = processedInvoices.find(inv => inv.invoiceNumber === invoiceNumber);
+            if (invoice && invoice.items[itemIndex]) {
+                // Parse the price (remove $ if present)
+                const newPrice = parseFloat(value.replace('$', '').replace(',', ''));
+                
+                if (!isNaN(newPrice)) {
+                    const item = invoice.items[itemIndex];
+                    
+                    // Update price and recalculate
+                    item.unitPrice = newPrice;
+                    item.subtotal = item.quantity * newPrice;
+                    
+                    // Update the subtotal cell
+                    const subtotalCell = document.getElementById(`subtotal-${invoiceNumber}-${itemIndex}`);
+                    if (subtotalCell) {
+                        subtotalCell.textContent = `$${item.subtotal.toFixed(2)}`;
+                        subtotalCell.style.background = '#d4edda';
+                        setTimeout(() => {
+                            subtotalCell.style.background = '';
+                        }, 2000);
+                    }
+                    
+                    // Recalculate invoice totals
+                    invoice.totalAmount = invoice.items.reduce((sum, item) => sum + item.subtotal, 0);
+                    
+                    // Update total display
+                    const totalDiv = document.getElementById(`total-${invoiceNumber}`);
+                    if (totalDiv) {
+                        totalDiv.innerHTML = `Total: ${invoice.totalQuantity || 0} units • ${invoice.totalCartons || 0} cartons • $${invoice.totalAmount.toFixed(2)}`;
+                        totalDiv.style.background = '#d4edda';
+                        setTimeout(() => {
+                            totalDiv.style.background = '';
+                        }, 2000);
+                    }
+                    
+                    showStatus(`💰 Updated price and recalculated totals`, 'success');
+                } else {
+                    showStatus('Invalid price format. Please enter a valid number.', 'error');
+                    // Restore original value
+                    event.target.textContent = `$${invoice.items[itemIndex].unitPrice.toFixed(2)}`;
+                }
+            }
+        }
+
+        // Add keyboard shortcuts for better editing experience
+        document.addEventListener('keydown', function(e) {
+            if (e.target && e.target.classList && e.target.classList.contains('editable-cell')) {
+                if (e.key === 'Escape') {
+                    // Restore original value
+                    e.target.textContent = e.target.dataset.original || '';
+                    e.target.blur();
+                } else if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    e.target.blur();
+                    
+                    // Move to next editable cell
+                    const editableCells = document.querySelectorAll('.editable-cell');
+                    const currentIndex = Array.from(editableCells).indexOf(e.target);
+                    if (currentIndex < editableCells.length - 1) {
+                        editableCells[currentIndex + 1].focus();
+                    }
+                }
+            }
+        });
+
+        function printInvoices() {
+            window.print();
+        }
+
+        async function downloadInvoiceZip(type) {
+            // Show loading message
+            showStatus(`Generating ${type} PDF files...`, 'success');
+            
+            // Filter invoices by type
+            const invoicesToProcess = processedInvoices.filter(invoice => invoice.type === type);
+            
+            if (invoicesToProcess.length === 0) {
+                showStatus(`No ${type} invoices to download.`, 'error');
+                return;
+            }
+            
+            try {
+                // Initialize jsPDF
+                const { jsPDF } = window.jspdf;
+                
+                // Create new ZIP file
+                const zip = new JSZip();
+                
+                // Process each invoice
+                for (let i = 0; i < invoicesToProcess.length; i++) {
+                    const invoice = invoicesToProcess[i];
+                    showStatus(`Processing invoice ${i + 1} of ${invoicesToProcess.length}...`, 'success');
+                    
+                    // Create PDF with explicit settings
+                    const pdf = new jsPDF({
+                        orientation: 'landscape',
+                        unit: 'mm',
+                        format: 'letter',
+                        compress: false  // Disable compression for better compatibility
+                    });
+                    
+                    // Add content to PDF
+                    generatePDFContent(pdf, invoice);
+                    
+                    // Get PDF as base64 string first (most compatible)
+                    const pdfBase64 = pdf.output('datauristring').split(',')[1];
+                    const fileName = `${invoice.invoiceNumber}.pdf`;
+                    
+                    // Add to ZIP as base64 with proper options
+                    zip.file(fileName, pdfBase64, {
+                        base64: true,
+                        createFolders: false
+                    });
+                }
+                
+                // Generate ZIP blob with minimal compression for better compatibility
+                const zipBlob = await zip.generateAsync({
+                    type: 'blob',
+                    compression: 'STORE',  // No compression for better compatibility
+                    mimeType: 'application/zip'
+                });
+                
+                // Create download link
+                const date = new Date().toISOString().split('T')[0].replace(/-/g, '');
+                const zipFileName = `${type.replace(' ', '_')}_${date}.zip`;
+                
+                // Use a small delay to ensure proper blob creation
+                setTimeout(() => {
+                    const url = URL.createObjectURL(zipBlob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = zipFileName;
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    link.click();
+                    
+                    // Clean up after a delay
+                    setTimeout(() => {
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                    }, 100);
+                }, 100);
+                
+                showStatus(`✓ ${type} invoices downloaded successfully!`, 'success');
+                
+            } catch (error) {
+                console.error('Error generating PDFs:', error);
+                showStatus('Error generating PDF files: ' + error.message, 'error');
+            }
+        }
+
+        function generatePDFContent(pdf, invoice) {
+            const senderName = document.getElementById('senderName').value;
+            const senderAddressRaw = document.getElementById('senderAddress').value;
+            const addressParts = senderAddressRaw.split('|');
+            const senderTin = document.getElementById('senderTin').value;
+            
+            // Page setup
+            const pageWidth = pdf.internal.pageSize.width;
+            const margin = 15;
+            let yPos = 20;
+            
+            // Title
+            pdf.setFontSize(18);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('COMMERCIAL INVOICE', pageWidth / 2, yPos, { align: 'center' });
+            
+            // Invoice info
+            yPos += 15;
+            pdf.setFontSize(10);
+            pdf.setFont(undefined, 'normal');
+            pdf.text(`Date: ${invoice.invoiceDate}`, margin, yPos);
+            pdf.text(`Invoice: ${invoice.invoiceNumber}`, pageWidth - margin, yPos, { align: 'right' });
+            
+            // Sender section
+            yPos += 15;
+            pdf.setFont(undefined, 'bold');
+            pdf.text('SENDER', margin, yPos);
+            pdf.setFont(undefined, 'normal');
+            yPos += 5;
+            pdf.text(senderName, margin, yPos);
+            yPos += 5;
+            addressParts.forEach(part => {
+                pdf.text(part, margin, yPos);
+                yPos += 5;
+            });
+            pdf.text(`Sender TIN#: ${senderTin}`, margin, yPos);
+            
+            // Receiver section
+            const receiverX = pageWidth / 2 + 10;
+            yPos = 50; // Reset to align with sender
+            pdf.setFont(undefined, 'bold');
+            pdf.text(`RECEIVER: ${invoice.fc}`, receiverX, yPos);
+            pdf.setFont(undefined, 'normal');
+            yPos += 5;
+            const fcAddressParts = invoice.fcAddress.split('\n');
+            fcAddressParts.forEach(part => {
+                pdf.text(part, receiverX, yPos);
+                yPos += 5;
+            });
+            
+            // Table
+            yPos += 15;
+            const columns = ['PO Number', 'EA', 'CA', 'ASIN', 'SKU', 'Desc', 'Materials', 'Country', 'Currency', 'Unit Value', 'Subtotal', 'HTS Code'];
+            // Adjusted column widths - reduced Materials, increased HTS Code to prevent cutoff
+            const columnWidths = [22, 10, 10, 22, 28, 50, 25, 15, 15, 18, 18, 27];
+            
+            // Table header
+            pdf.setFillColor(35, 47, 62); // Navy color
+            pdf.rect(margin, yPos, pageWidth - 2 * margin, 8, 'F');
+            pdf.setTextColor(255, 255, 255);
+            pdf.setFontSize(8);
+            pdf.setFont(undefined, 'bold');
+            
+            let xPos = margin + 2;
+            columns.forEach((col, i) => {
+                pdf.text(col, xPos, yPos + 5);
+                xPos += columnWidths[i];
+            });
+            
+            // Table rows
+            yPos += 10;
+            pdf.setTextColor(0, 0, 0);
+            pdf.setFont(undefined, 'normal');
+            pdf.setFontSize(7);
+            
+            // Add extra spacing after header
+            yPos += 2;
+            
+            invoice.items.forEach(item => {
+                if (yPos > 180) { // Adjusted for landscape - check if we need a new page
+                    pdf.addPage();
+                    yPos = 20;
+                }
+                
+                xPos = margin + 2;
+                const rowData = [
+                    item.poNumber,
+                    item.quantity.toString(),
+                    item.cartons.toString(),
+                    item.asin,
+                    item.sku || '', // Full SKU, no truncation
+                    item.description || '', // Full description, no truncation
+                    item.materials || '', // Full materials, no truncation
+                    item.countryOfOrigin || 'CN',
+                    item.currency,
+                    `${item.unitPrice.toFixed(2)}`,
+                    `${item.subtotal.toFixed(2)}`,
+                    item.htsCode || ''
+                ];
+                
+                // Calculate the maximum height needed for this row
+                let maxLines = 1;
+                
+                rowData.forEach((data, i) => {
+                    // For longer text fields, calculate how many lines they need
+                    if (i === 4 || i === 5 || i === 6) { // SKU, Desc, Materials columns
+                        const maxWidth = columnWidths[i] - 2;
+                        const textWidth = pdf.getTextWidth(data);
+                        
+                        if (textWidth > maxWidth) {
+                            // Estimate number of lines needed
+                            const linesNeeded = Math.ceil(textWidth / maxWidth);
+                            maxLines = Math.max(maxLines, linesNeeded);
+                        }
+                    }
+                });
+                
+                rowData.forEach((data, i) => {
+                    // For longer text fields, use text wrapping
+                    if (i === 4 || i === 5 || i === 6) { // SKU, Desc, Materials columns
+                        const maxWidth = columnWidths[i] - 2;
+                        const textWidth = pdf.getTextWidth(data);
+                        
+                        if (textWidth > maxWidth) {
+                            // Split text to fit width
+                            const lines = pdf.splitTextToSize(data, maxWidth);
+                            lines.forEach((line, lineIndex) => {
+                                pdf.text(line, xPos, yPos + (lineIndex * 4));
+                            });
+                        } else {
+                            pdf.text(data, xPos, yPos);
+                        }
+                    } else {
+                        pdf.text(data, xPos, yPos);
+                    }
+                    xPos += columnWidths[i];
+                });
+                
+                // Increase vertical spacing based on content height
+                // Use more space if we have multi-line content
+                yPos += 4 + (maxLines * 4);
+            });
+            
+            // Total
+            yPos += 10;
+            pdf.setFillColor(35, 47, 62);
+            pdf.rect(margin, yPos, pageWidth - 2 * margin, 10, 'F');
+            pdf.setTextColor(255, 255, 255);
+            pdf.setFont(undefined, 'bold');
+            pdf.setFontSize(10);
+            pdf.text(`Total: ${invoice.totalQuantity || 0} units • ${invoice.totalCartons || 0} cartons • ${(invoice.totalAmount || 0).toFixed(2)}`, 
+                     pageWidth - margin - 2, yPos + 7, { align: 'right' });
+        }
+    </script>
 </body>
 </html>
