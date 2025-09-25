@@ -655,40 +655,46 @@
         }
         document.getElementById('invoiceDate').value = getTodayDate();
 
-        // Fulfillment center addresses - Complete list for Canada and Mexico
-        const fcAddresses = {
-            // CANADA - Alberta
-            'XCAB': 'Amazon\n1882 118 Ave NE\nCalgary, AB, T3K 0R1\nCanada',
-            'YEG1': 'Amazon\n1440 39 AVE\nNisku, AB, T9E 0B4\nCanada',
-            'YEG2': 'Amazon\n27383 92 Ave\nAcheson, AB, T7X 5A6\nCanada',
-            'YYC1': 'Amazon\n293069 Colonel Robertson Way\nCalgary, AB, T4A 1C6\nCanada',
-            'YYC4': 'Amazon\n6635 106 AVE SE\nCALGARY, AB, T2C5X1\nCanada',
-            
-            // CANADA - Ontario
-            'YHM1': 'Amazon\n110 Aeropark Blvd\nHamilton, ON, L0R 1W0\nCanada',
-            'YOO1': 'Amazon\n789 Salem Rd N\nAjax, ON, L1Z 0J2\nCanada',
-            'YOW1': 'Amazon\n5225 Boundary Road\nNavan, ON, K4B 0L3\nCanada',
-            'YOW3': 'Amazon\n222 Citigate Drive\nNEPEAN, ON, K2J 6K7\nCanada',
-            'YXU1': 'Amazon\n11884 Sunset Dr\nST Thomas, ON, N5P 0G9\nCanada',
-            'YYZ3': 'Amazon\n7995 Winston Churchill Blvd.\nBrampton, ON, L6Y 5Z4\nCanada',
-            'YYZ4': 'Amazon\n8050 Heritage Road\nBrampton, ON, L6Y 0C9\nCanada',
-            'YYZ7': 'Amazon\n12724 Coleraine Drive\nBolton, ON, L7E 4L8\nCanada',
-            'YYZ9': 'Amazon\n6351 Steeles Ave E\nScarborough, ON, M1X 1N5\nCanada',
-            
-            // CANADA - British Columbia
-            'YVR2': 'Amazon\n450 Derwent PL\nDelta, BC, V3M 5Y9\nCanada',
-            'YVR3': 'Amazon\n109 Braid Street\nNew Westminster, BC, V3L5H4\nCanada',
-            'YVR4': 'Amazon\n4189 Salish Sea Way\nTsawwassen, BC, V4M 0B9\nCanada',
-            'YXX2': 'Amazon\n16131 Blundell Rd\nRICHMOND, BC, V6W 0A3\nCanada',
-            
-            // MEXICO
-            'BJX1': 'Amazon\n107 Carretera a Santa Ana del Conde, Km 4.5\nLeón, Guanajuato, 37680\nMEXICO',
-            'GDL1': 'Amazon\nCarr. Guadalajara - Chapala 9999\nZapote del Valle, Jal., 45672\nMEXICO',
-            'MEX2': 'Amazon\nManzana 005\nCuautitlan Izcalli, Estado de Mexico, 54769\nMEXICO',
-            'MEX3': 'Amazon\nAmazon MEX3 Prologis Park\nGrande Tepotzotlan, Estado de Mexico, 54607\nMEXICO',
-            'MEX6': 'Amazon\nFraccion B de la Fraccion 1 Ext SN\nTepotzotlán, Estado de Mexico, 54607\nMEXICO',
-            'MTY1': 'Amazon\nBLVD GUADALUPE No.403\nAPODACA, NUEVO LEON, 66627\nMEXICO',
-            'TIJ1': 'Amazon\nCamino Vecinal #20652\nNave 4 Tijuana, Baja California, 22203\nMEXICO'
+        // Fulfillment center addresses - Complete list for Canada
+const fcAddresses = {
+    // CANADA - Alberta
+    'XCAB': 'Amazon\n1882 118 Avenue Ne\nCalgary, AB, T3K 0R1\nCanada',
+    'YEG1': 'Amazon\n1440 39 Ave\nNisku, AB, T9E 0B4\nCanada',
+    'YEG2': 'Amazon\n27383 92 Ave\nAcheson, AB, T7X 2X2\nCanada',
+    'YYC1': 'Amazon\n293069 Colonel Robertson Way\nCalgary, AB, T4A 1C6\nCanada',
+    'YYC4': 'Amazon\n6635 106 Ave Se\nCalgary, AB, T2C 5X1\nCanada',
+    'YYC6': 'Amazon\n9705 68 St Se\nCalgary, AB, T2C 5V8\nCanada',
+
+    // CANADA - British Columbia
+    'YVR2': 'Amazon\n450 Derwent Pl\nDelta, BC, V3M 5Y9\nCanada',
+    'YVR3': 'Amazon\n109 Braid Street\nNew Westminster, BC, V3L5H4\nCanada',
+    'YVR4': 'Amazon\n4189 Salish Sea Way\nTsawwassen, BC, V4M 0B9\nCanada',
+
+    // CANADA - Ontario
+    'CNC1': 'Amazon\n3389 Steeles Ave E\nBrampton, ON, L6T 5W4\nCanada',
+    'KTO3': 'Amazon\n2480 Meadowvale Blvd Unit #3\nMississauga, ON, L5N 8M6\nCanada',
+    'VOPA': 'Amazon\n2 Bramkay St\nBrampton, ON, L6S 6E9\nCanada',
+    'VOPC': 'Amazon\n2994 Peddie Rd.\nMilton, ON, L9T 2X7\nCanada',
+    'VOPE': 'Amazon\n7900 Airport Road\nBrampton, ON, L6T4L7\nCanada',
+    'VORF': 'Amazon\n7850 Heritage Rd\nBrampton, ON, L6Y 0E2\nCanada',
+    'VUCY': 'Amazon\n99 Savannah Oaks Drive\nBrantford, ON, N3V 1E8\nCanada',
+    'VUNG': 'Amazon\n12315 Coleraine Dr\nBolton, ON, L7E 3A9\nCanada',
+    'XCAC': 'Amazon\n9501 Highway 50\nWoodbridge, ON, L4H 2B9\nCanada',
+    'XYY1': 'Amazon\n271 Church Street S\nAjax, ON, L1S 0A1\nCanada',
+    'YGK1': 'Amazon\n640 College St E\nBelleville, ON, K8N 0V2\nCanada',
+    'YHM1': 'Amazon\n110 Aeropark Blvd\nMount Hope, ON, L0R 1W1\nCanada',
+    'YHM2': 'Amazon\n140 Old Mill Road\nCambridge, ON, N3H 4R8\nCanada',
+    'YHM8': 'Amazon\n13153 Coleraine Dr\nBolton, ON, L7E 3B2\nCanada',
+    'YKF1': 'Amazon\n3495 Steeles Ave E\nBrampton, ON, L6T 5W8\nCanada',
+    'YOO1': 'Amazon\n789 Salem Rd N\nAjax, ON, L1Z 0J2\nCanada',
+    'YOW1': 'Amazon\n5225 Boundary Road\nNavan, ON, K4B 0L3\nCanada',
+    'YOW3': 'Amazon\n222 Citigate Drive\nNepean, ON, K2J 7C7\nCanada',
+    'YXU1': 'Amazon\n11884 Sunset Rd\nSt Thomas, ON, N5P 0G9\nCanada',
+    'YYZ1': 'Amazon\n6363 Millcreek Drive\nMississauga, ON, L5N 1L8\nCanada',
+    'YYZ3': 'Amazon\n7995 Winston Churchill Blvd.\nBrampton, ON, L6Y 5Z4\nCanada',
+    'YYZ4': 'Amazon\n8050 Heritage Road\nBrampton, ON, L6Y 6L5\nCanada',
+    'YYZ7': 'Amazon\n12724 Coleraine Drive\nBolton, ON, L7E 4L8\nCanada',
+    'YYZ9': 'Amazon\n6351 Steeles Ave E\nScarborough, ON, M1X 1N5\nCanada',
         };
 
         function toggleCheckbox(element, checkboxId) {
