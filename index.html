@@ -540,7 +540,7 @@
                         <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
                     </svg>
                     <h3 style="margin-bottom: 8px; color: var(--amazon-text);">Upload Excel File</h3>
-                    <p style="margin-bottom: 16px; color: #565959;">Drag and drop your PO file here or click to browse</p>
+                    <p style="margin-bottom: 16px; color: #565959;">Drag and drop your Generated PO upload file here or click to browse</p>
                     <button class="btn-primary" onclick="document.getElementById('fileInput').click()">
                         Choose File
                     </button>
@@ -655,46 +655,56 @@
         }
         document.getElementById('invoiceDate').value = getTodayDate();
 
-        // Fulfillment center addresses - Complete list for Canada
-const fcAddresses = {
-    // CANADA - Alberta
-    'XCAB': 'Amazon\n1882 118 Avenue Ne\nCalgary, AB, T3K 0R1\nCanada',
-    'YEG1': 'Amazon\n1440 39 Ave\nNisku, AB, T9E 0B4\nCanada',
-    'YEG2': 'Amazon\n27383 92 Ave\nAcheson, AB, T7X 2X2\nCanada',
-    'YYC1': 'Amazon\n293069 Colonel Robertson Way\nCalgary, AB, T4A 1C6\nCanada',
-    'YYC4': 'Amazon\n6635 106 Ave Se\nCalgary, AB, T2C 5X1\nCanada',
-    'YYC6': 'Amazon\n9705 68 St Se\nCalgary, AB, T2C 5V8\nCanada',
-
-    // CANADA - British Columbia
-    'YVR2': 'Amazon\n450 Derwent Pl\nDelta, BC, V3M 5Y9\nCanada',
-    'YVR3': 'Amazon\n109 Braid Street\nNew Westminster, BC, V3L5H4\nCanada',
-    'YVR4': 'Amazon\n4189 Salish Sea Way\nTsawwassen, BC, V4M 0B9\nCanada',
-
-    // CANADA - Ontario
-    'CNC1': 'Amazon\n3389 Steeles Ave E\nBrampton, ON, L6T 5W4\nCanada',
-    'KTO3': 'Amazon\n2480 Meadowvale Blvd Unit #3\nMississauga, ON, L5N 8M6\nCanada',
-    'VOPA': 'Amazon\n2 Bramkay St\nBrampton, ON, L6S 6E9\nCanada',
-    'VOPC': 'Amazon\n2994 Peddie Rd.\nMilton, ON, L9T 2X7\nCanada',
-    'VOPE': 'Amazon\n7900 Airport Road\nBrampton, ON, L6T4L7\nCanada',
-    'VORF': 'Amazon\n7850 Heritage Rd\nBrampton, ON, L6Y 0E2\nCanada',
-    'VUCY': 'Amazon\n99 Savannah Oaks Drive\nBrantford, ON, N3V 1E8\nCanada',
-    'VUNG': 'Amazon\n12315 Coleraine Dr\nBolton, ON, L7E 3A9\nCanada',
-    'XCAC': 'Amazon\n9501 Highway 50\nWoodbridge, ON, L4H 2B9\nCanada',
-    'XYY1': 'Amazon\n271 Church Street S\nAjax, ON, L1S 0A1\nCanada',
-    'YGK1': 'Amazon\n640 College St E\nBelleville, ON, K8N 0V2\nCanada',
-    'YHM1': 'Amazon\n110 Aeropark Blvd\nMount Hope, ON, L0R 1W1\nCanada',
-    'YHM2': 'Amazon\n140 Old Mill Road\nCambridge, ON, N3H 4R8\nCanada',
-    'YHM8': 'Amazon\n13153 Coleraine Dr\nBolton, ON, L7E 3B2\nCanada',
-    'YKF1': 'Amazon\n3495 Steeles Ave E\nBrampton, ON, L6T 5W8\nCanada',
-    'YOO1': 'Amazon\n789 Salem Rd N\nAjax, ON, L1Z 0J2\nCanada',
-    'YOW1': 'Amazon\n5225 Boundary Road\nNavan, ON, K4B 0L3\nCanada',
-    'YOW3': 'Amazon\n222 Citigate Drive\nNepean, ON, K2J 7C7\nCanada',
-    'YXU1': 'Amazon\n11884 Sunset Rd\nSt Thomas, ON, N5P 0G9\nCanada',
-    'YYZ1': 'Amazon\n6363 Millcreek Drive\nMississauga, ON, L5N 1L8\nCanada',
-    'YYZ3': 'Amazon\n7995 Winston Churchill Blvd.\nBrampton, ON, L6Y 5Z4\nCanada',
-    'YYZ4': 'Amazon\n8050 Heritage Road\nBrampton, ON, L6Y 6L5\nCanada',
-    'YYZ7': 'Amazon\n12724 Coleraine Drive\nBolton, ON, L7E 4L8\nCanada',
-    'YYZ9': 'Amazon\n6351 Steeles Ave E\nScarborough, ON, M1X 1N5\nCanada',
+        // Fulfillment center addresses - Complete list for Canada and Mexico
+        const fcAddresses = {
+            // CANADA - New addresses from Excel
+            'CNC1': 'Amazon\n3389 Steeles Ave E\nBrampton, L6T 5W4\nCanada',
+            'KTO3': 'Amazon\n2480 Meadowvale Blvd Unit #3\nMississauga, L5N 8M6\nCanada',
+            'VOPA': 'Amazon\n2 Bramkay St\nBrampton, L6S 6E9\nCanada',
+            'VOPC': 'Amazon\n2994 Peddie Rd.\nMilton, L9T 2X7\nCanada',
+            'VOPE': 'Amazon\n7900 Airport Road\nBrampton, L6T4L7\nCanada',
+            'VORF': 'Amazon\n7850 Heritage Rd\nBrampton, L6Y 0E2\nCanada',
+            'VUCY': 'Amazon\n99 Savannah Oaks Drive\nBrantford, N3V 1E8\nCanada',
+            'VUNG': 'Amazon\n12315 Coleraine Dr\nBolton, L7E 3A9\nCanada',
+            'XCAC': 'Amazon\n9501 Highway 50\nWoodbridge, L4H 2B9\nCanada',
+            'XYY1': 'Amazon\n271 Church Street S\nAjax, L1S 0A1\nCanada',
+            'YGK1': 'Amazon\n640 College St E\nBelleville, K8N 0V2\nCanada',
+            'YHM2': 'Amazon\n140 Old Mill Road\nCambridge, N3H 4R8\nCanada',
+            'YHM8': 'Amazon\n13153 Coleraine Dr\nBolton, L7E 3B2\nCanada',
+            'YKF1': 'Amazon\n3495 Steeles Ave E\nBrampton, L6T 5W8\nCanada',
+            'YYC6': 'Amazon\n9705 68 St Se\nCalgary, T2C 5V8\nCanada',
+            'YYZ1': 'Amazon\n6363 Millcreek Drive\nMississauga, ON, L5N 1L8\nCanada',
+            
+            // CANADA - Original addresses (reverted to old values)
+            'XCAB': 'Amazon\n1882 118 Ave NE\nCalgary, AB, T3K 0R1\nCanada',
+            'YEG1': 'Amazon\n1440 39 AVE\nNisku, AB, T9E 0B4\nCanada',
+            'YEG2': 'Amazon\n27383 92 Ave\nAcheson, AB, T7X 5A6\nCanada',
+            'YHM1': 'Amazon\n110 Aeropark Blvd\nHamilton, ON, L0R 1W0\nCanada',
+            'YOO1': 'Amazon\n789 Salem Rd N\nAjax, ON, L1Z 0J2\nCanada',
+            'YOW1': 'Amazon\n5225 Boundary Road\nNavan, ON, K4B 0L3\nCanada',
+            'YOW3': 'Amazon\n222 Citigate Drive\nNEPEAN, ON, K2J 6K7\nCanada',
+            'YVR2': 'Amazon\n450 Derwent PL\nDelta, BC, V3M 5Y9\nCanada',
+            'YVR3': 'Amazon\n109 Braid Street\nNew Westminster, BC, V3L5H4\nCanada',
+            'YVR4': 'Amazon\n4189 Salish Sea Way\nTsawwassen, BC, V4M 0B9\nCanada',
+            'YXU1': 'Amazon\n11884 Sunset Dr\nST Thomas, ON, N5P 0G9\nCanada',
+            'YXX2': 'Amazon\n16131 Blundell Rd\nRICHMOND, BC, V6W 0A3\nCanada',
+            'YYC1': 'Amazon\n293069 Colonel Robertson Way\nCalgary, AB, T4A 1C6\nCanada',
+            'YYC4': 'Amazon\n6635 106 AVE SE\nCALGARY, AB, T2C5X1\nCanada',
+            'YYZ3': 'Amazon\n7995 Winston Churchill Blvd.\nBrampton, ON, L6Y 5Z4\nCanada',
+            'YYZ4': 'Amazon\n8050 Heritage Road\nBrampton, ON, L6Y 0C9\nCanada',
+            'YYZ7': 'Amazon\n12724 Coleraine Drive\nBolton, ON, L7E 4L8\nCanada',
+            'YYZ9': 'Amazon\n6351 Steeles Ave E\nScarborough, ON, M1X 1N5\nCanada',
+            
+            // MEXICO - Original addresses (reverted to old values)
+            'BJX1': 'Amazon\n107 Carretera a Santa Ana del Conde, Km 4.5\nLeón, Guanajuato, 37680\nMEXICO',
+            'GDL1': 'Amazon\nCarr. Guadalajara - Chapala 9999\nZapote del Valle, Jal., 45672\nMEXICO',
+            'MEX1': 'Amazon\nParque Industrial Tres Rios, Tr8 (Amazon)\nCarretera Mexico – Queretaro Km 41.5\nCuautitlan Izcalli, Estado de Mexico, 54715\nMexico',
+            'MEX2': 'Amazon\nManzana 005\nCuautitlan Izcalli, Estado de Mexico, 54769\nMEXICO',
+            'MEX3': 'Amazon\nAmazon MEX3 Prologis Park\nGrande Tepotzotlan, Estado de Mexico, 54607\nMEXICO',
+            'MEX6': 'Amazon\nFraccion B de la Fraccion 1 Ext SN\nTepotzotlán, Estado de Mexico, 54607\nMEXICO',
+            'MTY1': 'Amazon\nBLVD GUADALUPE No.403\nAPODACA, NUEVO LEON, 66627\nMEXICO',
+            'TIJ1': 'Amazon\nCamino Vecinal #20652\nNave 4 Tijuana, Baja California, 22203\nMEXICO',
+            'VMEX': 'Amazon\nParque Industrial 3 Rios, Edificio 3\nCarretera Mexico-Queretaro Km 41.5\nCuautitlan Izcalli, 54715\nMexico'
         };
 
         function toggleCheckbox(element, checkboxId) {
@@ -823,23 +833,35 @@ const fcAddresses = {
                 return vendorCodes.includes(vendorCode);
             });
 
-            // Group by Fulfillment Center ONLY - all POs with same FC on same invoice
+            // Group by Fulfillment Center AND Vendor Code - separate invoices for each FC+Vendor combination
             const groups = {};
             filteredData.forEach(row => {
                 const fc = row['FC'] || row['Fulfillment Center'] || row['fulfillment_center'] || row['Warehouse'] || 'UNKNOWN';
+                const vendorCode = row['Vendor Code'] || row['vendor_code'] || row['VendorCode'] || '';
+                const arn = row['ARN'] || row['arn'] || ''; // Get ARN for UNIS
                 
-                // Use FC as the only grouping key
-                if (!groups[fc]) {
-                    groups[fc] = {
+                // Create unique key with FC and Vendor Code
+                const groupKey = `${fc}_${vendorCode}`;
+                
+                if (!groups[groupKey]) {
+                    groups[groupKey] = {
                         fc: fc,
+                        vendorCode: vendorCode,
+                        arn: arn, // Store ARN for UNIS naming
                         type: sheetType,
                         items: []
                     };
                 }
-                groups[fc].items.push(row);
+                
+                // Update ARN if found (for UNIS with multiple items)
+                if (arn && !groups[groupKey].arn) {
+                    groups[groupKey].arn = arn;
+                }
+                
+                groups[groupKey].items.push(row);
             });
 
-            // Create one invoice per FC
+            // Create one invoice per FC+Vendor combination
             Object.values(groups).forEach(group => {
                 const invoice = createInvoice(group);
                 processedInvoices.push(invoice);
@@ -850,8 +872,25 @@ const fcAddresses = {
             // Always use today's date for invoice creation
             const invoiceDate = getTodayDate();
             
-            // Create invoice number using FC code and date
-            const invoiceNumber = `${group.fc}-${invoiceDate.replace(/-/g, '')}-INV`;
+            // Determine vendor suffix based on vendor code
+            let vendorSuffix = '';
+            if (group.vendorCode === 'HG8BU') {
+                vendorSuffix = 'CA_DI';
+            } else if (group.vendorCode === 'PT71U') {
+                vendorSuffix = 'CA';
+            } else if (group.vendorCode === 'TZ7HI') {
+                vendorSuffix = 'MX';
+            }
+            
+            // Create invoice number based on type
+            let invoiceNumber;
+            if (group.type === 'Unis Labels' && group.arn) {
+                // For UNIS, use ARN as primary identifier with vendor suffix
+                invoiceNumber = `${group.arn}-${vendorSuffix}-${invoiceDate.replace(/-/g, '')}-INV`;
+            } else {
+                // For Encore and others, use FC with vendor suffix
+                invoiceNumber = `${group.fc}-${vendorSuffix}-${invoiceDate.replace(/-/g, '')}-INV`;
+            }
             
             // Calculate totals
             let totalQuantity = 0;
@@ -897,6 +936,8 @@ const fcAddresses = {
                 invoiceDate: invoiceDate,
                 type: group.type,
                 fc: group.fc,
+                vendorCode: group.vendorCode,
+                arn: group.arn,
                 fcAddress: fcAddresses[group.fc] || `Amazon\n${group.fc}\nAddress TBD\nCA`,
                 items: items,
                 totalQuantity: totalQuantity,
@@ -1307,6 +1348,8 @@ const fcAddresses = {
             // Add extra spacing after header
             yPos += 2;
             
+            // IMPORTANT: Use the edited data from the invoice object directly
+            // This ensures any edits made in the preview are reflected in the PDF
             invoice.items.forEach(item => {
                 if (yPos > 180) { // Adjusted for landscape - check if we need a new page
                     pdf.addPage();
@@ -1314,19 +1357,20 @@ const fcAddresses = {
                 }
                 
                 xPos = margin + 2;
+                // Use the actual edited values from the item object
                 const rowData = [
-                    item.poNumber,
+                    item.poNumber || '',
                     item.quantity.toString(),
                     item.cartons.toString(),
-                    item.asin,
-                    item.sku || '', // Full SKU, no truncation
-                    item.description || '', // Full description, no truncation
-                    item.materials || '', // Full materials, no truncation
-                    item.countryOfOrigin || 'CN',
-                    item.currency,
-                    `${item.unitPrice.toFixed(2)}`,
-                    `${item.subtotal.toFixed(2)}`,
-                    item.htsCode || ''
+                    item.asin || '',
+                    item.sku || '',
+                    item.description || '', // Uses edited description
+                    item.materials || '', // Uses edited materials
+                    item.countryOfOrigin || 'CN', // Uses edited country
+                    item.currency || 'USD',
+                    `${item.unitPrice.toFixed(2)}`, // Uses edited price
+                    `${item.subtotal.toFixed(2)}`, // Uses recalculated subtotal
+                    item.htsCode || '' // Uses edited HTS code
                 ];
                 
                 // Calculate the maximum height needed for this row
@@ -1372,14 +1416,14 @@ const fcAddresses = {
                 yPos += 4 + (maxLines * 4);
             });
             
-            // Total
+            // Total - uses the recalculated totals from edited data
             yPos += 10;
             pdf.setFillColor(35, 47, 62);
             pdf.rect(margin, yPos, pageWidth - 2 * margin, 10, 'F');
             pdf.setTextColor(255, 255, 255);
             pdf.setFont(undefined, 'bold');
             pdf.setFontSize(10);
-            pdf.text(`Total: ${invoice.totalQuantity || 0} units • ${invoice.totalCartons || 0} cartons • ${(invoice.totalAmount || 0).toFixed(2)}`, 
+            pdf.text(`Total: ${invoice.totalQuantity || 0} units • ${invoice.totalCartons || 0} cartons • ${invoice.totalAmount.toFixed(2)}`, 
                      pageWidth - margin - 2, yPos + 7, { align: 'right' });
         }
     </script>
