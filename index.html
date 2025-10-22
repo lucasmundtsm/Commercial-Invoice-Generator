@@ -905,7 +905,8 @@
                 const quantity = parseInt(row['Total Qty to Fulfill']) || 0;
                 const cartons = parseInt(row['CARTONS']) || 0;
                 const unitPrice = parseFloat(row['Cost']) || 0;
-                const htsCode = row['HTS code'] || '';
+                // Make HTS code case-insensitive
+                const htsCode = row['HTS code'] || row['hts code'] || row['HTS Code'] || row['Hts Code'] || '';
                 
                 // Calculate subtotal
                 const subtotal = quantity * unitPrice;
