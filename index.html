@@ -594,10 +594,10 @@
                 <div class="form-group">
                     <label>Select Vendor Codes</label>
                     <div class="checkbox-group">
-                        <div class="amazon-checkbox selected" onclick="toggleCheckbox(this, 'vendor-HG8BU')">
-                            <input type="checkbox" id="vendor-HG8BU" value="HG8BU" checked>
+                        <div class="amazon-checkbox selected" onclick="toggleCheckbox(this, 'vendor-CADI')">
+                            <input type="checkbox" id="vendor-CADI" value="CADI" checked>
                             <div class="checkbox-label">
-                                <span class="checkbox-title">HG8BU</span>
+                                <span class="checkbox-title">HG8BU / 30B3W</span>
                                 <span class="checkbox-desc">Canada DI Account</span>
                             </div>
                         </div>
@@ -775,11 +775,18 @@
 
         function getSelectedVendorCodes() {
             const codes = [];
-            ['HG8BU', 'PT71U', 'TZ7HI'].forEach(code => {
-                if (document.getElementById(`vendor-${code}`).checked) {
-                    codes.push(code);
-                }
-            });
+            // Check Canada DI Account (both HG8BU and 30B3W)
+            if (document.getElementById('vendor-CADI').checked) {
+                codes.push('HG8BU', '30B3W');
+            }
+            // Check Canada Kitchen Account
+            if (document.getElementById('vendor-PT71U').checked) {
+                codes.push('PT71U');
+            }
+            // Check Mexico Kitchen Account
+            if (document.getElementById('vendor-TZ7HI').checked) {
+                codes.push('TZ7HI');
+            }
             return codes;
         }
 
@@ -874,7 +881,7 @@
             
             // Determine vendor suffix based on vendor code
             let vendorSuffix = '';
-            if (group.vendorCode === 'HG8BU') {
+            if (group.vendorCode === 'HG8BU' || group.vendorCode === '30B3W') {
                 vendorSuffix = 'CA_DI';
             } else if (group.vendorCode === 'PT71U') {
                 vendorSuffix = 'CA';
